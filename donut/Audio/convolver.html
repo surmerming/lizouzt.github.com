@@ -1,5 +1,5 @@
-<button onclick="blender.getUserMedia()">UserMedia</button>
-<button onclick="blender.compressor()">compressor</button>
+<button onclick="enviraudio()">UserMedia</button>
+<button onclick="compressor()">compressor</button>
 <select onchange="changeType(this.value);">
 	<option>lowpass</option>
 	<option>highpass</option>
@@ -33,11 +33,14 @@
 	<option>tim-warehouse-stretch</option>
 	<option>wild-echo</option>
 </select>
+<hr>
+<canvas id="canvas_1"></canvas>
 
 <script type="text/javascript" src="js/bufferLoader.js"></script>
 <script type="text/javascript" src="js/init.js"></script>
 <script type="text/javascript">
-	var context = new webkitAudioContext(),
+	var audioContext = !!window.AudioContext ? AudioContext : webkitAudioContext;
+	var context = new audioContext(),
 		REVERBLEVEL = 0.8,
 		SOURCES = [],
 		GAINNODE = [];
@@ -62,9 +65,9 @@
 		}
 		SOURCES = [];
 	}
-	Blender.prototype.getUserMedia = function(){
-		this.stop();
-		navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+	var enviraudio = function(){
+		blender.stop();
+		navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || window.getUserMedia;
 
 		navigator.getUserMedia({audio:true},function(stream){
 		    var source = context.createMediaStreamSource(stream);
@@ -73,10 +76,10 @@
 		    source.connect(mainFilter);
 			mainFilter.connect(GAINNODE[0]);
 			GAINNODE[0].connect(context.destination);
-		});
+		}, function(e){console.error(e.message);});
 	}
-	Blender.prototype.compressor = function(){
-		this.stop();
+	var compressor = function(){
+		blender.stop();
 		GAINNODE = [];
 
 	    compressor = context.createDynamicsCompressor();
@@ -124,6 +127,8 @@
 	    g1_2.connect(compressor);
 	    g1_2.connect(reverb);
 	    g1_2.connect(delay);
+	    
+	    blender.analyzing(compressor);
 	    source2.start(0);
 	    source1.start(0);
 
@@ -133,6 +138,7 @@
 	Blender.prototype.init = function(){
 		var source = context.createBufferSource();
 		SOURCES.push(source);
+		this.setSourceBuffer(source, 'song');
 
 		var dryGN = context.createGain();
 		var wetGN = context.createGain();
@@ -158,11 +164,44 @@
 		source.playbackRate.value = 1.0;
 		source.loop = true;
 
-		this.setSourceBuffer(source, 'song');
 		source.start(context.currentTime);
+		
+		this.analyzing(dryGN);
+	}
+	Blender.prototype.Process = function(e){
+		var leftBuffer = e.inputBuffer.getChannelData(0);
+		var rightBuffer = e.inputBuffer.getChannelData(1);
+
+		for(var i = 0; i < leftBuffer.length; ++i) {
+	        leftBuffer[i] = rightBuffer[i] = (Math.random() - 0.5) * 1;
+	    }
+	}
+	Blender.prototype.analyzing = function(obj){
+		analyzer = context.createAnalyser();
+		analyzer.smoothingTimeConstant = 0.5;
+    	analyzer.fftSize = 1024;
+    	obj.connect(analyzer);
+    	setInterval(this.drawGraph, 100);
+	}
+	Blender.prototype.drawGraph = function(){
+		data = new Float32Array(1024);
+		analyzer.getFloatFrequencyData(data);
+		ctx.clearRect(0, 0, 400, 200);
+	    ctx.fillStyle = "#000000";
+	    ctx.fillRect(0, 0, 400, 200);
+	    ctx.fillStyle = "#009900";
+	    for(var i = 0; i < 512; ++i) {
+	        var f = context.sampleRate * i / 1024;
+	        y = 128 + (data[i] + 48.16) * 2.56;
+	        ctx.fillRect(i, 200 - y, 1, y);
+	    }
 	}
 
 	window.onload = function(){
+		cv = document.getElementById("canvas_1"),
+	    ctx = cv.getContext("2d"),
+	    cv.width = 400;
+	    cv.height = 200;
 		loadBuffers(context, function(){
 			blender = new Blender();
 		});
