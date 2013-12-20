@@ -1,0 +1,30 @@
+.box-shadows(@shadowValue){
+	-moz-box-shadow: @shadowValue;
+	-webkit-box-shadow: @shadowValue;
+	-o-box-shadow: @shadowValue;
+	
+}
+
+.border_radius(@radiusSize){
+	border-radius: @radiusSize;
+	-webkit-border-radius: @radiusSize;
+	-moz-border-radius: @radiusSize;
+	-o-border-radius: @radiusSize;
+	-ms-border-radius: @radiusSize;
+}
+
+.background-transparent(@color) {
+	/*背景透明设置*/
+	background-color:@color; /*标准浏览器*/
+	background-color:transparent\9\1; /*IE9*/
+	@color-ie:argb(@color);
+	filter:~"progid:DXImageTransform.Microsoft.Gradient(GradientType=1, startColorstr='@{color-ie}', endColorstr='@{color-ie}')";	/*IE6789*/
+}
+
+.transition(@transition){
+	-webkit-transition: @transition;
+	-moz-transition: @transition;
+	-o-transition: @transition;
+	-ms-transition: @transition;
+	transition: @transition;
+}

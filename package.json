@@ -1,0 +1,40 @@
+{
+  "name": "lizouzt",
+  "version": "0.1.0",
+  "description": "Personal Frame",
+  "main": "Gruntfile.js",
+  "dependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-jshint": "~0.6.0",
+    "grunt-contrib-nodeunit": "~0.2.0",
+    "grunt-contrib-uglify": "~0.2.2",
+    "grunt-contrib-concat": "~0.1.1",
+    "grunt-contrib-cssmin": "~0.5.0",
+    "grunt-htmlhint": "*"
+  },
+  "scripts": {
+    "test": "tap test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lizouzt/lizouzt.git"
+  },
+  "keywords": [
+    "IUI",
+    "framework",
+    "html",
+    "personal",
+    "lizouzt",
+    "just",
+    "for",
+    "fun"
+  ],
+  "author": "Tao Z. <lizouzt@gmail.com>",
+  "license": "BSD",
+  "readmeFilename": "README",
+  "gitHead": "6b6d7459076fc6b67151a68c639046618a0b866f",
+  "devDependencies": {
+    "grunt-contrib-uglify": "~0.2.5",
+    "grunt-contrib-cssmin": "~0.5.0"
+  }
+}

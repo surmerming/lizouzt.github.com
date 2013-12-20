@@ -256,11 +256,13 @@ page.init = function(){
 	page.initEvent();
 	page.initCtrEvent();
 }
+
 window.onload = function(){
+	if(!document.getElementById('dash'))
+		return;
 	Globle.push({
 		dash: document.getElementById('dash'),
 		board: document.getElementById('board'),
-		popBox: document.getElementById('popBox'),
 		inputDisplay: dash.querySelector('article p'),
 		keyboard: dash.querySelector('section'),
 		outputDisplay: board.querySelector('article'),

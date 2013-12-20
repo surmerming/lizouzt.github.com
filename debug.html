@@ -1,0 +1,44 @@
+<body style="-webkit-perspective: 800px;">
+</a>
+<a href="http://www.youtube.com/watch?v=VIDEO_IDENTIFIER">Play Video</a>
+<a href="http://www.youtube.com/v/VIDEO_IDENTIFIER">Play Video</a>
+<hr>
+<div
+  ongesturestart="gestureStart(event);"
+  ongesturechange="gestureChange(event);"
+  ongestureend="gestureEnd(event);"
+ style="background-color:red; width: 400px; height: 250px; -webkit-transform-style: preserve-3d;"></div>
+</body>
+<script type="text/javascript">
+	var startRotation, startScale;
+	function gestureChange(e){
+  		e.preventDefault();
+	    e.target.style.webkitTransform = 'scale(' + e.scale  + startScale  + ') rotate(' + e.rotation + startRotation + 'deg)';
+	    console.log('changed: ', e.target.style.webkitTransform);
+	}
+	function gestureStart(e){
+		e.preventDefault();
+		startRotation = e.rotation;
+		startScale = e.scale;
+		console.log('start: ',startRotation, startScale);
+	}
+	function gestureEnd(e){
+		e.preventDefault();
+		console.log('end');
+	}
+
+	window.onload = function(){
+		for(var i = 0; i < 3; i++){
+			var interval = setInterval(function(interval,num){
+				var count = 0, time = interval;
+				return function(){
+			    	if( count > 40 ){
+			        	clearInterval(time);
+			        	console.log( time , i + " %c 有没有到底有没有","color:red");
+			    	}
+			    	count += 1;
+			    }
+			}(interval, i), 10);
+		}
+	}
+</script>
