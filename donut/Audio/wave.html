@@ -13,10 +13,12 @@
     </style>
     <script type="text/javascript" src="js/bufferLoader.js"></script>
 	<script type="text/javascript" src="js/init.js"></script>
-	<script type="text/javascript" src="js/surface.js"></script>
+	<script src="js/three.js"></script>
+	<script type="text/javascript" src="js/stage.js"></script>
 	<script type="text/javascript">
     	var audioContext = !!window.AudioContext ? AudioContext : webkitAudioContext;
 		var context = new audioContext(),
+			TYPE = 1,
 			REVERBLEVEL = 0.8,
 			SOURCES = [],
 			GAINNODE = [];
@@ -41,8 +43,10 @@
 			}
 			SOURCES = [];
 		}
-
 		Blender.prototype.init = function(){
+			this.initSounds();
+		}
+		Blender.prototype.initSounds = function(){
 			var source = context.createBufferSource();
 			SOURCES.push(source);
 			this.setSourceBuffer(source, 'song');
@@ -87,15 +91,20 @@
 			analyzer.smoothingTimeConstant = 0.5;
 	    	analyzer.fftSize = 1024;
 	    	obj.connect(analyzer);
-	    	setInterval(this.drawGraph, 100);
+	    	// setInterval(this.drawGraph.call(this), 100);
 		}
 		Blender.prototype.drawGraph = function(){
 			data = new Float32Array(1024);
 			analyzer.getFloatFrequencyData(data);
 			data = Array.prototype.slice.call(data, 0);
-			surface.sync(data);
+			
+			// surface.sync(data);
+			if(TYPE == 1)
+				this.circle(data);
 		}
-
+		Blender.prototype.circle = function(data){
+			ctx.clearRect(0);
+		}
 		var enviraudio = function(){
 			blender.stop();
 			navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || window.getUserMedia;
@@ -111,8 +120,7 @@
 		}
 
     	window.onload = function(){
-    		onloadInit();
-			
+    		Stage.init();
 			loadBuffers(context, function(){
 				blender = new Blender();
 			});
@@ -144,6 +152,6 @@
 		<option>wild-echo</option>
 	</select>
   	<hr>
-    <!-- The canvas element is append to the DOM here. -->
+    <div id="frame"></div>
   </body>
 </html>

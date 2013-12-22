@@ -66,15 +66,16 @@ var constants = {
       */
       {
         var i = 0;
-        
+        var initMatrix = [["1", "0", "0"], ["0", "0.1368116852722142", "-0.9288985185737607"], ["0", "0.9604665157824929", "0.09227112753361533"]];
         for (var x = constants.xMin; x <= constants.xMax; x += constants.xDelta)
         {
           for (var y = constants.yMin; y <= constants.yMax; y += constants.yDelta)
           {
-            this.points[i] = point(x, y, 0); // Store a surface point (in vector format) into the list of surface points.              
+            this.points[i] = point(x, y, this.equation(x, y)); // Store a surface point (in vector format) into the list of surface points.              
             ++i;
           }
         }
+        this.multi(initMatrix);
       }
 
       // -----------------------------------------------------------------------------------------------------
@@ -127,7 +128,7 @@ var constants = {
       {
         return A[Z] - B[Z]; // Determines if point A is behind, in front of, or at the same level as point B (with respect to the z-axis).
       }
-            
+      
       // -----------------------------------------------------------------------------------------------------
       Surface.prototype.draw = function()
       {
@@ -178,13 +179,15 @@ var constants = {
       // -----------------------------------------------------------------------------------------------------
       Surface.prototype.sync = function(data)
       {
-        var P = this.points;
         var len = data.length;
-        if(len > P.length)
-          len = P.length;
+        if(len > this.points.length)
+          len = this.points.length;
 
+        (data[i]);
         for(var i = 0, j = len; i < j; i++){
-          P[i][Z] = data[i] / 30;
+          var z = data[i] / 30;
+          this.points[i][Z] = z;
+          this.points[i][Y] = z*Math.sqrt(2)/2;
         }
 
         this.erase();
@@ -202,7 +205,7 @@ var constants = {
         var Rx = [ [0, 0, 0],
                    [0, 0, 0],
                    [0, 0, 0] ]; // Create an initialized 3 x 3 rotation matrix.
-                           
+
         Rx[0][0] = 1;
         Rx[0][1] = 0; // Redundant but helps with clarity.
         Rx[0][2] = 0; 
@@ -212,14 +215,14 @@ var constants = {
         Rx[2][0] = 0;
         Rx[2][1] = Math.sin( sign*constants.dTheta );
         Rx[2][2] = Math.cos( sign*constants.dTheta );
-        
+
         this.multi(Rx); // If P is the set of surface points, then this method performs the matrix multiplcation: Rx * P
         this.erase(); // Note that one could use two canvases to speed things up, which also eliminates the need to erase.
         this.draw();
       }
-         
+
       // -----------------------------------------------------------------------------------------------------
-         
+
       Surface.prototype.yRotate = function(sign)
       /*
         Assumes "sign" is either 1 or -1, which is used to rotate the surface "clockwise" or "counterclockwise".
@@ -322,7 +325,7 @@ var constants = {
           case constants.rightArrow:
             // console.log("rightArrow");
             surface.yRotate(1);   
-            evt.preventDefault(); 
+            evt.preventDefault();
             break;
         }
       }
