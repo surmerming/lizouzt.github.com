@@ -18,7 +18,7 @@
 	<script type="text/javascript">
     	var audioContext = !!window.AudioContext ? AudioContext : webkitAudioContext;
 		var context = new audioContext(),
-			TYPE = 1,
+			TYPE = 2,
 			REVERBLEVEL = 0.8,
 			SOURCES = [],
 			GAINNODE = [];
@@ -89,18 +89,23 @@
 		Blender.prototype.analyzing = function(obj){
 			analyzer = context.createAnalyser();
 			analyzer.smoothingTimeConstant = 0.5;
-	    	analyzer.fftSize = 1024;
+	    	analyzer.fftSize = 512;
 	    	obj.connect(analyzer);
-	    	// setInterval(this.drawGraph.call(this), 100);
+	    	this.drawGraph();
 		}
 		Blender.prototype.drawGraph = function(){
-			data = new Float32Array(1024);
-			analyzer.getFloatFrequencyData(data);
-			data = Array.prototype.slice.call(data, 0);
-			
-			// surface.sync(data);
-			if(TYPE == 1)
-				this.circle(data);
+			var self = this;
+			setInterval(function(){
+				data = new Float32Array(512);
+				analyzer.getFloatFrequencyData(data);
+				data = Array.prototype.slice.call(data, 0);
+				
+				// surface.sync(data);
+				if(TYPE == 1)
+					self.circle(data);
+				else if(TYPE == 2)
+					Stage.dance(data);
+			}, 100);
 		}
 		Blender.prototype.circle = function(data){
 			ctx.clearRect(0);
