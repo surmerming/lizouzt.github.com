@@ -196,7 +196,7 @@ window.webkitRequestFileSystem(window.PERSISTENT, 1024*2048, function(fs){
   read();
 }, errorHandler);
 
-// navigator.webkitPersistentStorage.requestQuota(1024*1024, function(grantedBytes){console.log(grantedBytes);},function(e){console.log('error:',e)})
+navigator.webkitPersistentStorage.requestQuota(1024*1024, function(grantedBytes){console.log(grantedBytes);},function(e){console.log('error:',e)})
 
 function haha(){
   var path = 'music/genres/jazz/';

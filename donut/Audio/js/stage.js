@@ -1,9 +1,11 @@
+// http://rndz.org/js-%E7%AB%8B%E4%BD%93%E9%AD%94%E6%96%B9%EF%BC%88%E8%82%86%EF%BC%89/
 var Stage = function(){
 	var Wide = High = document.documentElement.clientWidth,
+		moment_x = 0,
 		scene, camera, renderer, dLight, pLight, aLight;
 	var cubeList = [];
 	window.cubeRotate = new THREE.Object3D;
-
+	window.analyNum = 0;
 	var initThree = function(){
 		renderer = new THREE.WebGLRenderer({ antialias: true });
 	    renderer.setSize(Wide, High);
@@ -15,12 +17,13 @@ var Stage = function(){
 	},
 	setCamera = function(){
 		camera = new THREE.PerspectiveCamera( 45 , Wide / High , 1 , 10000 );
-		camera.position.set(400, 400,400);
+		camera.position.set(500, 500,500);
 		camera.up.x = 0;
 		camera.up.y = 0;
 		camera.up.z = 1;
 		scene.add(camera);
 		camera.lookAt( {x:0, y:0, z:0 } );
+		cubeRotate.add(camera);
   	},
   	setLight = function(){
   		dLight = new THREE.DirectionalLight(0xffffff, .5);
@@ -90,23 +93,22 @@ var Stage = function(){
   	},
   	addCube = function(h){
 		var H = h || 10;
-  		for(var x = -8; x < 8; x++){
-  			for(var y = -8; y < 8; y++){
+  		for(var x = -16; x < 16; x++){
+  			for(var y = -16; y < 16; y++){
   				cube({'x':20*x,'y':20*y}, H);
   			}
   		}
   		cubeList.sort(sortCube);
-  		cubeRotate.add(cubeList);
   	},
   	addObj = function(){
-  		addCoord();
+  		// addCoord();
 
-  		var groundGeo = new THREE.PlaneGeometry(320, 320);
-  		var groundMat = new THREE.MeshPhongMaterial({ambient: 0x0000ff/*蓝*/, color: 0xffffff});
-  		var ground = new THREE.Mesh(groundGeo, groundMat);
-  		scene.add(ground);
-  		ground.receiveShadow = true;
-  		ground.position.set(0,0,0);
+  		// var groundGeo = new THREE.PlaneGeometry(320, 320);
+  		// var groundMat = new THREE.MeshPhongMaterial({ambient: 0x0000ff/*蓝*/, color: 0xffffff});
+  		// var ground = new THREE.Mesh(groundGeo, groundMat);
+  		// scene.add(ground);
+  		// ground.receiveShadow = true;
+  		// ground.position.set(0,0,0);
 
   		addCube();
   	},
@@ -114,6 +116,13 @@ var Stage = function(){
   		var time = Date.now() * 0.0005;
   		pLight.position.x = Math.cos(time) * 200;
   		pLight.position.y = Math.sin(time * 0.5) * 200;
+
+  		if(moment_x != 0)
+  			cubeRotate.rotation.z += moment_x;
+  		else
+  			cubeRotate.rotation.z += Math.sin(time)* 0.01;  		
+
+  		camera.rotation.y += 0.001*Math.cos(time);
 
 		renderer.render(scene, camera);
 		requestAnimationFrame(animate);
@@ -123,6 +132,10 @@ var Stage = function(){
 		camera.updateProjectionMatrix();
 		renderer.setSize( window.innerWidth, window.innerHeight );
 	},
+	onFrameMove = function(e){
+		var xm = Wide/2, ym = High/2;
+		moment_x = 0.01*(e.x - xm)/xm;
+	},
 	letDance = function(data){
 		var d = Array.prototype.slice.call(data);
 		d = d.sort(function(a,b){
@@ -131,12 +144,16 @@ var Stage = function(){
 			else
 				return -1;
 		});
+
 		for(var i in cubeList){
 			var cube = cubeList[i];
 			var z = Math.abs(d[i]);
-			if(z > 100){
-				var del = Math.ceil(z-100) / 10;
-				z = Math.pow(del,2)/2;
+			if(z > 0){
+				var ez = Math.floor(z / 100);
+				var rz = (z % 100) / 100;
+
+				z = 10 * ez + (1 + 2*Math.pow(0.99,i))*Math.asin(rz) * Math.pow(5, rz);
+
 				cube.visible = true;
 				cube.scale.setZ(z);
 				cube.position.z = z*5;
@@ -162,11 +179,12 @@ var Stage = function(){
 
 			renderer.clear();
 			renderer.render(scene, camera);
-
+			onWindowResize();
 			animate();
-
 			window.addEventListener('resize', onWindowResize, false);
-			document.getElementById('frame').onmousewheel = function(e){e.preventDefault();camera.position.x += e.wheelDelta * 0.1;}
+			var frame = document.getElementById('frame');
+			frame.addEventListener('mousemove', onFrameMove,false);
+			frame.addEventListener('mouseout', function(){moment_x = 0;}, false);
 		},
 		dance: letDance
 	};

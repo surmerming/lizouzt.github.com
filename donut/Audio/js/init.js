@@ -3,17 +3,17 @@ var BUFFERS = {};
 
 // An object to track the buffers to load {name: path}
 var BUFFERS_TO_LOAD = {
-    blueyellow: 'sounds/blueyellow.wav',
-    jam: 'sounds/br-jam-loop.wav',
-    hihat: 'sounds/hihat.wav',
-    crowd: 'sounds/clapping-crowd.wav',
-    kick: 'sounds/kick.wav',
-    moon: 'sounds/moon.mp3',
-    organ: 'sounds/organ-echo-chords.wav',
+    // blueyellow: 'sounds/blueyellow.wav',
+    // jam: 'sounds/br-jam-loop.wav',
+    // hihat: 'sounds/hihat.wav',
+    // crowd: 'sounds/clapping-crowd.wav',
+    // kick: 'sounds/kick.wav',
+    // moon: 'sounds/moon.mp3',
+    // organ: 'sounds/organ-echo-chords.wav',
     techno: 'sounds/techno.mp3',
-    snare: 'sounds/snare.wav',
-    song: 'sounds/song.mp3',
-    atmos: "sounds/atmos.mp3"
+    // snare: 'sounds/snare.wav',
+    // song: 'sounds/song.mp3',
+    // atmos: "sounds/atmos.mp3"
 };
 
 // Loads all sound samples into the buffers object.
