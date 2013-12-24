@@ -133,8 +133,9 @@ var Stage = function(){
 		renderer.setSize( window.innerWidth, window.innerHeight );
 	},
 	onFrameMove = function(e){
+		var px = e.x || e.mozMovementX;
 		var xm = Wide/2, ym = High/2;
-		moment_x = 0.01*(e.x - xm)/xm;
+		moment_x = 0.01*(px - xm)/xm;
 	},
 	letDance = function(data){
 		var d = Array.prototype.slice.call(data);
