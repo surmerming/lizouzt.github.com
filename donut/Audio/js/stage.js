@@ -149,7 +149,7 @@ var Stage = function(){
 			var cube = cubeList[i];
 			var z = Math.abs(d[i]);
 			if(z > 0){
-				var ez = Math.floor(z / 100);
+				var ez = z > 100 ? Math.floor(z / 100) - 0.7 : 0;
 				var rz = (z % 100) / 100;
 
 				z = 10 * ez + (1 + 2*Math.pow(0.99,i))*Math.asin(rz) * Math.pow(5, rz);
