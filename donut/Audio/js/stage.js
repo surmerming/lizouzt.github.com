@@ -1,8 +1,8 @@
-// http://rndz.org/js-%E7%AB%8B%E4%BD%93%E9%AD%94%E6%96%B9%EF%BC%88%E8%82%86%EF%BC%89/
+
 var Stage = function(){
-	var Wide = document.documentElement.clientWidth, High = document.documentElement.clientHeight,
+	var Wide = document.documentElement.clientWidth, High = document.documentElement.clientHeight - 100,
 		triangleWide = Math.sqrt(Math.pow(Wide/2,2)*2) - 300,
-		triangleHigh = Math.sqrt(Math.pow(High/2,2)*2) - 300,
+		triangleHigh = Math.sqrt(Math.pow(High/2,2)*2) - 200,
 		moment_x = moment_y = 0,
 		scene, renderer, dLight, pLight, aLight;
 
@@ -133,23 +133,17 @@ var Stage = function(){
   				disx = _y - _x,
   				disy = _y + _x;
 
-  			if(Math.abs(cubeRotate.position.x + disx) < triangleWide){
+  			if(Math.abs(cubeRotate.position.x + disx) < triangleWide)
   				cubeRotate.position.x += disx;
-  				console.log('XXXX');
-  			}
-  			if(Math.abs(cubeRotate.position.y + disy) < triangleHigh){
+
+  			if(Math.abs(cubeRotate.position.y + disy) < triangleHigh)
   				cubeRotate.position.y += disy;
-  				console.log('yyyy');
-  			}
   		}
   		
   		cubeRotate.rotation.z += sin*0.01;
   		
-  		if(!!panner){
-  			panner.setOrientation(1, Math.sin(camera.rotation._y), 1); 
-  			// panner.setPosition(sin,cos,0);
-  			// console.log(Math.cos(camera.rotation._x), Math.sin(camera.rotation._y), 1);
-  		}
+  		if(!!panner)
+  			panner.setPosition(-cubeRotate.position.x*2/Wide,-cubeRotate.position.y*2/High,0);
 
 		renderer.render(scene, camera);
 		requestAnimationFrame(animate);
