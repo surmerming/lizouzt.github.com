@@ -23,6 +23,7 @@
 			SOURCES = [],
 			GAINNODE = [];
 
+		var reverb, mainFilter, panner;
 		var Blender = function(){
 			this.init.apply(this, arguments);
 		}
@@ -51,6 +52,12 @@
 			SOURCES.push(source);
 			this.setSourceBuffer(source, 'techno');
 
+			panner = context.createPanner();
+			panner.coneOuterGain = 0.2;
+			panner.coneOuterAngle = 180;
+			panner.conInnerAngle = 0;
+			panner.connect(context.destination);
+
 			var dryGN = context.createGain();
 			var wetGN = context.createGain();
 			GAINNODE.push(dryGN, wetGN);
@@ -63,11 +70,11 @@
 
 			source.connect(mainFilter);
 			mainFilter.connect(dryGN);
-			dryGN.connect(context.destination);
+			dryGN.connect(panner);
 
 			mainFilter.connect(reverb);
 			reverb.connect(wetGN);
-			wetGN.connect(context.destination);
+			wetGN.connect(panner);
 			wetGN.gain.value = REVERBLEVEL;
 
 			this.setConvolverSourceBuffer('sounds/reverbs/telephone.wav');

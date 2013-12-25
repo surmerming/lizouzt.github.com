@@ -1,11 +1,14 @@
 // http://rndz.org/js-%E7%AB%8B%E4%BD%93%E9%AD%94%E6%96%B9%EF%BC%88%E8%82%86%EF%BC%89/
 var Stage = function(){
-	var Wide = High = document.documentElement.clientWidth,
-		moment_x = 0,
-		scene, camera, renderer, dLight, pLight, aLight;
+	var Wide = document.documentElement.clientWidth, High = document.documentElement.clientHeight,
+		triangleWide = Math.sqrt(Math.pow(Wide/2,2)*2) - 300,
+		triangleHigh = Math.sqrt(Math.pow(High/2,2)*2) - 300,
+		moment_x = moment_y = 0,
+		scene, renderer, dLight, pLight, aLight;
+
 	var cubeList = [];
 	window.cubeRotate = new THREE.Object3D;
-	window.analyNum = 0;
+	window.camera;
 	var initThree = function(){
 		renderer = new THREE.WebGLRenderer({ antialias: true });
 	    renderer.setSize(Wide, High);
@@ -23,7 +26,6 @@ var Stage = function(){
 		camera.up.z = 1;
 		scene.add(camera);
 		camera.lookAt( {x:0, y:0, z:0 } );
-		cubeRotate.add(camera);
   	},
   	setLight = function(){
   		dLight = new THREE.DirectionalLight(0xffffff, .5);
@@ -48,6 +50,7 @@ var Stage = function(){
 		pLight = new THREE.PointLight('gold', 3, 300);
     	scene.add(pLight);
     	pLight.position.set(-200,-200,200)
+    	cubeRotate.add(pLight);
   	},
   	addCoord = function(){
   		var op = new THREE.Vector3(0, 0, 0),
@@ -90,6 +93,7 @@ var Stage = function(){
 		scene.add(cube);
 		cube.position.set(p.x, p.y, h/2);
 		cubeList.push(cube);
+		cubeRotate.add(cube);
   	},
   	addCube = function(h){
 		var H = h || 10;
@@ -113,16 +117,39 @@ var Stage = function(){
   		addCube();
   	},
   	animate = function(){
-  		var time = Date.now() * 0.0005;
+  		var time = Date.now() * 0.0005, sin = Math.sin(time), cos = Math.cos(time);
   		pLight.position.x = Math.cos(time) * 200;
   		pLight.position.y = Math.sin(time * 0.5) * 200;
 
-  		if(moment_x != 0)
-  			cubeRotate.rotation.z += moment_x;
-  		else
-  			cubeRotate.rotation.z += Math.sin(time)* 0.01;  		
+  		if(moment_x != 0 || moment_y !=0){
+  			var dirx = diry = -1;
+  			if(moment_x > 0)
+  				dirx = 1;
+  			if(moment_y > 0)
+  				diry = 1;
 
-  		camera.rotation.y += 0.001*Math.cos(time);
+  			var _x = dirx * Math.sqrt(Math.pow(moment_x, 2)/2),
+  				_y = diry * Math.sqrt(Math.pow(moment_y, 2)/2),
+  				disx = _y - _x,
+  				disy = _y + _x;
+
+  			if(Math.abs(cubeRotate.position.x + disx) < triangleWide){
+  				cubeRotate.position.x += disx;
+  				console.log('XXXX');
+  			}
+  			if(Math.abs(cubeRotate.position.y + disy) < triangleHigh){
+  				cubeRotate.position.y += disy;
+  				console.log('yyyy');
+  			}
+  		}
+  		
+  		cubeRotate.rotation.z += sin*0.01;
+  		
+  		if(!!panner){
+  			panner.setOrientation(1, Math.sin(camera.rotation._y), 1); 
+  			// panner.setPosition(sin,cos,0);
+  			// console.log(Math.cos(camera.rotation._x), Math.sin(camera.rotation._y), 1);
+  		}
 
 		renderer.render(scene, camera);
 		requestAnimationFrame(animate);
@@ -133,9 +160,11 @@ var Stage = function(){
 		renderer.setSize( window.innerWidth, window.innerHeight );
 	},
 	onFrameMove = function(e){
-		var px = e.x || e.mozMovementX;
+		var px = e.x || e.mozMovementX,
+			py = e.y || e.mozMovementY;
 		var xm = Wide/2, ym = High/2;
-		moment_x = 0.01*(px - xm)/xm;
+		moment_x = 3*(px - xm)/xm;
+		moment_y = 3*(py - ym)/ym;
 	},
 	letDance = function(data){
 		var d = Array.prototype.slice.call(data);
@@ -185,7 +214,7 @@ var Stage = function(){
 			window.addEventListener('resize', onWindowResize, false);
 			var frame = document.getElementById('frame');
 			frame.addEventListener('mousemove', onFrameMove,false);
-			frame.addEventListener('mouseout', function(){moment_x = 0;}, false);
+			frame.addEventListener('mouseout', function(){moment_x = moment_y = 0;}, false);
 		},
 		dance: letDance
 	};

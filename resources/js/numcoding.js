@@ -24,7 +24,7 @@ page.initFontSize = function(){
 	Globle.inputDisplay.ins = inputH - 5;
 	Globle.inputDisplay.criticalPoint = Globle.inputDisplay.clientWidth;
 	Globle.keyboard.style.lineHeight = Globle.keyboard.children[0].clientHeight + 'px';
-	Globle.outputDisplay.style.height = Globle.board.clientHeight - 100 + 'px';
+	Globle.outputDisplay.style.height = Globle.board.clientHeight - 110 + 'px';
 }
 page.updateDisplay = function(){
 	this.dashFlowCtr();
@@ -67,8 +67,9 @@ page.boardFlowCtr = function(){
 			aset = aset.reverse();
 			var unit = this.units[i];
 			var setTemp = this.baseSetCtr(aset);
-			result += setTemp.replace(/[〇+|零+]$/, '') + unit;
+			result += setTemp == ('〇' || '零') ? setTemp : setTemp.replace(/[〇+|零+]$/, '') + unit;
 		}
+		result = result.replace(/〇+|零+/g, this.cnnums[0]).replace(/(〇+|零+)$/, '');
 
 		if(!!after){
 			this.decimal = true;
