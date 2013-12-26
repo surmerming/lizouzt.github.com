@@ -6,6 +6,26 @@
 		padding: 0;
 		overflow: hidden;
 	}
+	header{
+  		height: 50px;
+  		line-height: 50px;
+  		text-align: right;
+  		background-color: #ECECC4;
+  	}
+  	header address{
+  		width: 150px;
+  		display: inline-block;
+		float: left;
+		font-size: 20px;
+  	}
+  	a{
+  		color: gray;
+  		text-decoration: none;
+  	}
+	.google_plus{
+    	width: 100px;
+    	float: left;
+    }
 	#localVideo, #canvas1, #canvas2{
 		visibility: hidden;
 		position: absolute;
@@ -24,6 +44,24 @@
 		overflow: hidden;
 	}
 </style>
+<header>
+	<address>@copy <a target="_blank" href="mailto:lizouzt@gmail.com">Tao Z.</a></address>
+	<div class="google_plus">
+		<!-- Place this tag where you want the +1 button to render -->
+	<g:plusone size="medium" href="https://plus.google.com/104366552863428381755/posts/jbNM1L47kTt"></g:plusone>
+
+	<!-- Place this render call where appropriate -->
+	<script type="text/javascript">
+	  window.___gcfg = {lang: 'zh-CN'};
+
+	  (function() {
+	    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+	    po.src = 'https://apis.google.com/js/plusone.js';
+	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+	  })();
+	</script>
+	</div>
+</header>
 <video id="localVideo" autoplay></video>
 <canvas id="canvas1"></canvas>
 <canvas id="canvas2"></canvas>
