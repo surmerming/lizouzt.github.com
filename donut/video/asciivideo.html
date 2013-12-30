@@ -9,8 +9,9 @@
 	header{
   		height: 50px;
   		line-height: 50px;
-  		text-align: right;
-  		background-color: #ECECC4;
+  		text-align: left;
+  		position: absolute;
+  		top: 0;
   	}
   	header address{
   		width: 150px;
@@ -19,13 +20,9 @@
 		font-size: 20px;
   	}
   	a{
-  		color: gray;
+  		color: red;
   		text-decoration: none;
   	}
-	.google_plus{
-    	width: 100px;
-    	float: left;
-    }
 	#localVideo, #canvas1, #canvas2{
 		visibility: hidden;
 		position: absolute;
@@ -45,7 +42,7 @@
 	}
 </style>
 <header>
-	<address>@copy <a target="_blank" href="mailto:lizouzt@gmail.com">Tao Z.</a></address>
+	<address>&copy;<a target="_blank" href="mailto:lizouzt@gmail.com">Tao Z.</a></address>
 	<div class="google_plus">
 		<!-- Place this tag where you want the +1 button to render -->
 	<g:plusone size="medium" href="https://plus.google.com/104366552863428381755/posts/jbNM1L47kTt"></g:plusone>
@@ -127,4 +124,12 @@
         	return false;
 		}
 	}
+</script>
+<script type="text/javascript">
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	  ga('create', 'UA-45213859-1', 'lizhouzt.com');
+	  ga('send', 'pageview');
 </script>
