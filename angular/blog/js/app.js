@@ -6,7 +6,6 @@ define(["angular", "./controllers", "./filters"], function(angular) {
 		$routeProvider.
 		when('/blogs/:query', {templateUrl: 'partials/list.html',   controller: 'ListController'}).
 	    when('/blog/:id', {templateUrl: 'partials/blog.html', controller: 'BlogController'}).
-	    when('/search', {templateUrl: 'partials/searchResult.html', controller: 'SearchController'}).
 	    otherwise({redirectTo: '/blogs/'});
     }]);
 });
