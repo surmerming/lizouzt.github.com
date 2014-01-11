@@ -13,7 +13,7 @@ define(["angular"], function (angular){
     }]);
 
     controllerModule.controller('SearchController', ['$scope', function ($scope){
-        $scope.message = 'search';
+        
     }]);
 
     controllerModule.controller('BlogController', ['$scope', '$http', '$routeParams', function ($scope, $http, $routeParams) {
